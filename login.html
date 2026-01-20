@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Velora Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-body">
+
+  <div class="auth-container auth-modern">
+    <h2 class="auth-title">Welcome Back</h2>
+    <p class="auth-subtitle">Login or create a new account to continue.</p>
+
+    <!-- inline message (no ugly alerts) -->
+    <div id="auth-message" class="auth-message" style="display:none;"></div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-mode="login">Login</button>
+      <button class="auth-tab" data-mode="signup">Create Account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="login-form" class="auth-form active">
+      <label for="login-email">Email</label>
+      <input
+        id="login-email"
+        type="email"
+        required
+        placeholder="you@example.com"
+      />
+
+      <label for="login-password">Password</label>
+      <input
+        id="login-password"
+        type="password"
+        required
+        placeholder="Enter password"
+      />
+
+      <button type="submit" class="btn auth-btn">Login</button>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form id="signup-form" class="auth-form">
+      <label for="signup-email">Email</label>
+      <input
+        id="signup-email"
+        type="email"
+        required
+        placeholder="you@example.com"
+      />
+
+      <label for="signup-password">Password</label>
+      <input
+        id="signup-password"
+        type="password"
+        required
+        placeholder="Create password"
+      />
+
+      <label for="signup-confirm">Confirm Password</label>
+      <input
+        id="signup-confirm"
+        type="password"
+        required
+        placeholder="Re-enter password"
+      />
+
+      <button type="submit" class="btn auth-btn">Create Account</button>
+    </form>
+
+    <p class="auth-back">
+      ← <a href="index.html">Back to Store</a>
+    </p>
+  </div>
+
+  <script>
+    // ---- Tab switching ----
+    const tabs = document.querySelectorAll(".auth-tab");
+    const forms = document.querySelectorAll(".auth-form");
+    const messageBox = document.getElementById("auth-message");
+
+    function showAuthMessage(text, type = "error") {
+      if (!messageBox) return;
+      if (!text) {
+        messageBox.style.display = "none";
+        return;
+      }
+      messageBox.textContent = text;
+      messageBox.className = "auth-message " + type;
+      messageBox.style.display = "block";
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const mode = tab.getAttribute("data-mode");
+
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        forms.forEach(form => form.classList.remove("active"));
+        document.getElementById(mode + "-form").classList.add("active");
+
+        // clear messages when switching
+        showAuthMessage("");
+      });
+    });
+
+    // ---- SIGNUP LOGIC ----
+    document.getElementById("signup-form").addEventListener("submit", e => {
+      e.preventDefault();
+
+      const email = document.getElementById("signup-email").value.trim();
+      const password = document.getElementById("signup-password").value.trim();
+      const confirm = document.getElementById("signup-confirm").value.trim();
+
+      if (!email || !password || !confirm) {
+        showAuthMessage("Please fill all fields.", "error");
+        return;
+      }
+      if (password !== confirm) {
+        showAuthMessage("Passwords do not match.", "error");
+        return;
+      }
+
+      const newUser = { email, password };
+      localStorage.setItem("userAccount", JSON.stringify(newUser));
+      showAuthMessage("Account created successfully! Please login.", "success");
+
+      // switch to login tab
+      document.querySelector('.auth-tab[data-mode="login"]').click();
+    });
+
+    // ---- LOGIN LOGIC ----
+    document.getElementById("login-form").addEventListener("submit", e => {
+      e.preventDefault();
+
+      const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password").value.trim();
+
+      const stored = localStorage.getItem("userAccount");
+      if (!stored) {
+        showAuthMessage("No account found. Please create a new account first.", "error");
+        return;
+      }
+
+      const userAccount = JSON.parse(stored);
+      if (userAccount.email !== email || userAccount.password !== password) {
+        showAuthMessage("Invalid email or password.", "error");
+        return;
+      }
+
+      // Derive a simple display name from email
+      const name = email.includes("@") ? email.split("@")[0] : email;
+      const loggedUser = { name, email };
+
+      localStorage.setItem("loggedInUser", JSON.stringify(loggedUser));
+      showAuthMessage("Welcome, " + name + "!", "success");
+
+      // small delay so user can see message (optional)
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 600);
+    });
+  </script>
+</body>
+</html>

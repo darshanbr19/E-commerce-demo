@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>Velora Online Store</h1>
+
+        <div class="header-right">
+
+            <!-- User info -->
+            <div id="user-info" class="user-info">
+                <span id="welcome-text">Guest</span>
+                <a id="login-link" href="login.html">Login</a>
+                <button id="logout-btn" class="btn small-btn" style="display:none;">Logout</button>
+            </div>
+
+            <!-- CATEGORY FILTER -->
+            <div class="category-filter">
+                <button class="filter-btn active" data-category="All">All</button>
+                <button class="filter-btn" data-category="Electronics">Electronics</button>
+                <button class="filter-btn" data-category="Clothes">Dress</button>
+                <button class="filter-btn" data-category="Shoes">Shoes</button>
+            </div>
+
+            <!-- Search box -->
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search products...">
+                <button class="btn small-btn" id="search-btn">Search</button>
+            </div>
+
+            <!-- Cart icon -->
+            <div class="cart-icon" onclick="openCart()">
+                🛒 <span id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Products Section -->
+    <section id="products" class="products-grid"></section>
+
+    <!-- Cart Popup -->
+    <div id="cart-popup" class="cart-popup">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+
+        <div class="cart-summary">
+            <p>Subtotal: ₹<span id="total-price">0</span></p>
+            <div class="cart-actions">
+                <button onclick="placeOrder()" class="btn">Proceed to Checkout</button>
+                <button onclick="clearCart()" class="btn" style="background:#ef4444;">Clear Cart</button>
+                <button onclick="closeCart()" class="btn close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- toast placeholder (will be created dynamically by JS) -->
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
